@@ -1,4 +1,5 @@
-# MODULO: excepciones.py  |  APORTE: Nicolas Chacon Salagado
+# MODULO: excepciones.py 
+# APORTE: Nicolas Chacon Salagado
 # Define la jerarquia de excepciones personalizadas del sistema
 
 

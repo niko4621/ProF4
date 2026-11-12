@@ -1,4 +1,5 @@
-# MODULO: logger.py  |  APORTE: Nicolas Chacon Salgado
+# MODULO: logger.py  
+# APORTE: Nicolas Chacon Salgado
 # Configura el archivo de logs donde se registran errores y eventos
 
 
