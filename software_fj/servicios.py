@@ -57,3 +57,30 @@ class Servicio(Entidad):  #clase abstracta: hereda de Entidad y agrega lo comun 
 
     def __str__(self):  #define como se muestra el servicio al imprimirlo
         return f"{self._nombre} (${self._tarifa_hora:,.0f}/hora)"  #ejemplo: Sala Andes ($50,000/hora)
+    
+    
+class ReservaSala(Servicio):  #servicio hijo: reserva de salas de reuniones
+    """reserva de una sala; cobra recargo si la sala es grande"""
+
+    RECARGO_SALA_GRANDE = 0.20  #recargo del 20% para salas de mas de 20 personas
+
+    def __init__(self, id_servicio, nombre, tarifa_hora, capacidad):  #agrega la capacidad de la sala
+        super().__init__(id_servicio, nombre, tarifa_hora)  #reutiliza el constructor de Servicio
+        if isinstance(capacidad, bool) or not isinstance(capacidad, int) or capacidad <= 0:  #la capacidad debe ser un entero positivo
+            raise ErrorValidacion(f"La capacidad '{capacidad}' debe ser un numero entero mayor que cero.")  #lanza error si no sirve
+        self._capacidad = capacidad  #guarda la capacidad de personas
+
+    @property  #atributo de solo lectura
+    def capacidad(self):  #getter de la capacidad
+        return self._capacidad  #devuelve la capacidad guardada
+
+    def calcular_costo(self, horas):  #sobrescribe el calculo: tarifa por horas, con recargo si es grande
+        self._validar_horas(horas)  #revisa las horas
+        costo = self._tarifa_hora * horas  #costo normal: tarifa por cantidad de horas
+        if self._capacidad > 20:  #si la sala es para mas de 20 personas
+            costo = costo * (1 + self.RECARGO_SALA_GRANDE)  #aplica el recargo del 20%
+        return costo  #devuelve el costo base
+
+    def obtener_resumen(self):  #sobrescribe el metodo abstracto de Entidad
+        return f"Servicio ID: {self.id} | Sala: {self._nombre} | Capacidad: {self._capacidad} personas | Tarifa: ${self._tarifa_hora:,.0f}/hora"  #resumen en una linea
+    
