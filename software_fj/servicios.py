@@ -84,3 +84,27 @@ class ReservaSala(Servicio):  #servicio hijo: reserva de salas de reuniones
     def obtener_resumen(self):  #sobrescribe el metodo abstracto de Entidad
         return f"Servicio ID: {self.id} | Sala: {self._nombre} | Capacidad: {self._capacidad} personas | Tarifa: ${self._tarifa_hora:,.0f}/hora"  #resumen en una linea
     
+    
+class AlquilerEquipo(Servicio):  #servicio hijo: alquiler de equipos
+    """alquiler de un equipo; suma un seguro fijo por cada alquiler"""
+
+    def __init__(self, id_servicio, nombre, tarifa_hora, tipo_equipo, seguro=20000):  #agrega el tipo de equipo y el seguro (opcional)
+        super().__init__(id_servicio, nombre, tarifa_hora)  #reutiliza el constructor de Servicio
+        if tipo_equipo is None or str(tipo_equipo).strip() == "":  #el tipo de equipo es obligatorio
+            raise ParametroFaltanteError("El tipo de equipo es obligatorio.")  #lanza error si falta
+        if isinstance(seguro, bool) or not isinstance(seguro, (int, float)) or seguro < 0:  #el seguro no puede ser negativo
+            raise ErrorValidacion(f"El seguro '{seguro}' debe ser un numero mayor o igual a cero.")  #lanza error si no sirve
+        self._tipo_equipo = str(tipo_equipo).strip()  #guarda el tipo de equipo (ej: portatil, proyector)
+        self._seguro = float(seguro)  #guarda el valor del seguro
+
+    @property  #atributo de solo lectura
+    def tipo_equipo(self):  #getter del tipo de equipo
+        return self._tipo_equipo  #devuelve el tipo de equipo
+
+    def calcular_costo(self, horas):  #sobrescribe el calculo: tarifa por horas mas el seguro
+        self._validar_horas(horas)  #revisa las horas
+        return self._tarifa_hora * horas + self._seguro  #costo de las horas mas el seguro fijo
+
+    def obtener_resumen(self):  #sobrescribe el metodo abstracto de Entidad
+        return f"Servicio ID: {self.id} | Equipo: {self._nombre} ({self._tipo_equipo}) | Tarifa: ${self._tarifa_hora:,.0f}/hora | Seguro: ${self._seguro:,.0f}"  #resumen en una linea
+    
