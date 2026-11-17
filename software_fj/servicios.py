@@ -131,3 +131,40 @@ class AsesoriaEspecializada(Servicio):  #servicio hijo: asesorias con un experto
 
     def obtener_resumen(self):  #sobrescribe el metodo abstracto de Entidad
         return f"Servicio ID: {self.id} | Asesoria: {self._nombre} | Nivel: {self._nivel} | Tarifa: ${self._tarifa_hora:,.0f}/hora"  #resumen en una linea
+    
+    
+# Pruebas del modulo (solo se ejecutan al correr: python servicios.py)
+if __name__ == "__main__":  #este bloque solo corre si se ejecuta este archivo directamente
+    print("--------------------------------------------------")  
+    print("          PRUEBAS DE LA CLASE SERVICIOS           ")  
+    print("--------------------------------------------------")  
+
+    print("\n1. Creando los tres servicios y calculando su costo por 3 horas:")  #prueba de polimorfismo
+    sala = ReservaSala("SRV-01", "Sala Andes", 50000, 25)  #sala grande: tendra recargo
+    equipo = AlquilerEquipo("SRV-02", "Portatil Lenovo", 15000, "portatil")  #equipo con seguro de 20.000
+    asesoria = AsesoriaEspecializada("SRV-03", "Asesoria en Python", 80000, "senior")  #asesor senior: factor 1.5
+    for servicio in [sala, equipo, asesoria]:  #recorre los tres servicios con el mismo codigo
+        print("  ", servicio.obtener_resumen())  #cada uno muestra su propio resumen (sobrescritura)
+        print("   Costo base 3 h: $", f"{servicio.calcular_costo(3):,.0f}")  #cada uno calcula distinto (polimorfismo)
+
+    print("\n2. Probando la 'sobrecarga' de calcular_costo_total:")  #mismo metodo con distintos parametros
+    print("   Solo horas:              $", f"{asesoria.calcular_costo_total(2):,.0f}")  #sin impuesto ni descuento
+    print("   Con IVA 19%:             $", f"{asesoria.calcular_costo_total(2, 0.19):,.0f}")  #con impuesto
+    print("   Con IVA y 10% descuento: $", f"{asesoria.calcular_costo_total(2, 0.19, 0.10):,.0f}")  #con impuesto y descuento
+
+    print("\n3. Probando validaciones (deben salir errores controlados):")  #pruebas de datos invalidos
+    pruebas = [  #lista de intentos que deben fallar
+        lambda: ReservaSala("SRV-04", "", 50000, 10),  #nombre vacio
+        lambda: AlquilerEquipo("SRV-05", "Proyector", -100, "proyector"),  #tarifa negativa
+        lambda: AsesoriaEspecializada("SRV-06", "Asesoria Java", 70000, "maestro"),  #nivel que no existe
+        lambda: sala.calcular_costo_total(0),  #cero horas
+    ]
+    for prueba in pruebas:  #ejecuta cada intento
+        try:  #intenta ejecutar la operacion
+            prueba()  #llama a la prueba
+        except ErrorValidacion as error:  #captura los errores de validacion propios
+            print(f"   -> [{error.codigo}] {error}")  #muestra el codigo y el mensaje del error
+
+    print("\n--------------------------------------------------") 
+    print("       TODAS LAS PRUEBAS FUNCIONARON BIEN         ") 
+    print("--------------------------------------------------")  
