@@ -70,7 +70,7 @@ class ReservaSala(Servicio):  #servicio hijo: reserva de salas de reuniones
             raise ErrorValidacion(f"La capacidad '{capacidad}' debe ser un numero entero mayor que cero.")  #lanza error si no sirve
         self._capacidad = capacidad  #guarda la capacidad de personas
 
-    @property  #atributo de solo lectura
+    @property 
     def capacidad(self):  #getter de la capacidad
         return self._capacidad  #devuelve la capacidad guardada
 
@@ -97,7 +97,7 @@ class AlquilerEquipo(Servicio):  #servicio hijo: alquiler de equipos
         self._tipo_equipo = str(tipo_equipo).strip()  #guarda el tipo de equipo (ej: portatil, proyector)
         self._seguro = float(seguro)  #guarda el valor del seguro
 
-    @property  #atributo de solo lectura
+    @property 
     def tipo_equipo(self):  #getter del tipo de equipo
         return self._tipo_equipo  #devuelve el tipo de equipo
 
@@ -108,3 +108,26 @@ class AlquilerEquipo(Servicio):  #servicio hijo: alquiler de equipos
     def obtener_resumen(self):  #sobrescribe el metodo abstracto de Entidad
         return f"Servicio ID: {self.id} | Equipo: {self._nombre} ({self._tipo_equipo}) | Tarifa: ${self._tarifa_hora:,.0f}/hora | Seguro: ${self._seguro:,.0f}"  #resumen en una linea
     
+    
+class AsesoriaEspecializada(Servicio):  #servicio hijo: asesorias con un experto
+    """asesoria cuyo precio cambia segun el nivel del asesor"""
+
+    FACTORES_NIVEL = {"junior": 1.0, "senior": 1.5, "experto": 2.0}  #multiplicador de la tarifa segun el nivel
+
+    def __init__(self, id_servicio, nombre, tarifa_hora, nivel):  #agrega el nivel del asesor
+        super().__init__(id_servicio, nombre, tarifa_hora)  #reutiliza el constructor de Servicio
+        nivel_limpio = str(nivel).strip().lower() if nivel is not None else ""  #pasa el nivel a minusculas para compararlo
+        if nivel_limpio not in self.FACTORES_NIVEL:  #el nivel debe ser junior, senior o experto
+            raise ErrorValidacion(f"El nivel '{nivel}' no es valido. Use: junior, senior o experto.")  #lanza error si no existe
+        self._nivel = nivel_limpio  #guarda el nivel del asesor
+
+    @property 
+    def nivel(self):  #getter del nivel
+        return self._nivel  #devuelve el nivel guardado
+
+    def calcular_costo(self, horas):  #sobrescribe el calculo: tarifa por horas por el factor del nivel
+        self._validar_horas(horas)  #revisa las horas
+        return self._tarifa_hora * horas * self.FACTORES_NIVEL[self._nivel]  #un experto cobra el doble que un junior
+
+    def obtener_resumen(self):  #sobrescribe el metodo abstracto de Entidad
+        return f"Servicio ID: {self.id} | Asesoria: {self._nombre} | Nivel: {self._nivel} | Tarifa: ${self._tarifa_hora:,.0f}/hora"  #resumen en una linea
