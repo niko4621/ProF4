@@ -32,3 +32,28 @@ class Servicio(Entidad):  #clase abstracta: hereda de Entidad y agrega lo comun 
     def calcular_costo(self, horas):  #calcula el costo base segun las horas (polimorfismo)
         """cada servicio calcula su costo base de forma distinta"""
         pass  #no tiene cuerpo aqui, lo implementan las clases hijas
+    
+    
+    def _validar_horas(self, horas):  #metodo interno que revisa que las horas sean validas
+        if isinstance(horas, bool) or not isinstance(horas, (int, float)) or horas <= 0:  #las horas deben ser un numero mayor que cero
+            raise ErrorValidacion(f"Las horas '{horas}' deben ser un numero mayor que cero.")  #lanza error si las horas no sirven
+
+    def calcular_costo_total(self, horas, impuesto=0.0, descuento=0.0):  #"sobrecarga": se puede llamar con 1, 2 o 3 datos
+        """calcula el costo final aplicando impuesto y descuento opcionales"""
+        self._validar_horas(horas)  #revisa las horas antes de calcular
+        if not isinstance(impuesto, (int, float)) or not 0 <= impuesto <= 1:  #el impuesto va como porcentaje entre 0 y 1 (0.19 = 19%)
+            raise ErrorValidacion(f"El impuesto '{impuesto}' debe estar entre 0 y 1.")  #lanza error si el impuesto no sirve
+        if not isinstance(descuento, (int, float)) or not 0 <= descuento <= 1:  #el descuento tambien va entre 0 y 1
+            raise ErrorValidacion(f"El descuento '{descuento}' debe estar entre 0 y 1.")  #lanza error si el descuento no sirve
+        costo_base = self.calcular_costo(horas)  #llama al calculo propio de cada servicio (polimorfismo)
+        total = costo_base * (1 + impuesto) * (1 - descuento)  #suma el impuesto y resta el descuento
+        if total <= 0: 
+            raise CalculoInconsistenteError(f"El costo calculado ({total}) es inconsistente.")  #lanza error de calculo
+        return round(total, 2)  #devuelve el total redondeado a 2 decimales
+
+    def validar_estado(self):  #implementa el metodo abstracto de Entidad
+        """revisa que el servicio tenga datos y este disponible"""
+        return bool(self._nombre) and self._tarifa_hora > 0 and self.activo  #True solo si todo esta en orden
+
+    def __str__(self):  #define como se muestra el servicio al imprimirlo
+        return f"{self._nombre} (${self._tarifa_hora:,.0f}/hora)"  #ejemplo: Sala Andes ($50,000/hora)
