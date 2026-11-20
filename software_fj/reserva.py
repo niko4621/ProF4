@@ -70,3 +70,18 @@ class Reserva(Entidad):  #hereda de Entidad: tiene id, fecha de creacion y estad
 
     def __str__(self):  #define como se muestra la reserva al imprimirla
         return f"Reserva {self.id} ({self._estado})"  #ejemplo: Reserva RES-01 (confirmada)
+    
+    
+    def confirmar(self):  #pasa la reserva de pendiente a confirmada
+        if self._estado != "pendiente":  #solo se confirma una reserva pendiente
+            raise OperacionNoPermitidaError(f"No se puede confirmar la reserva {self.id}: esta '{self._estado}'.")  #lanza error si no corresponde
+        if not self._servicio.activo:  #el servicio pudo desactivarse despues de crear la reserva
+            raise ServicioNoDisponibleError(f"El servicio '{self._servicio.nombre}' ya no esta disponible.")  #lanza error de disponibilidad
+        self._estado = "confirmada"  #cambia el estado
+        logger.info(f"Reserva {self.id} confirmada")  #registra el cambio en el log
+
+    def cancelar(self):  #cancela la reserva si aun no se ha procesado
+        if self._estado in ("cancelada", "procesada"):  #no se cancela algo ya cancelado o ya cobrado
+            raise OperacionNoPermitidaError(f"No se puede cancelar la reserva {self.id}: esta '{self._estado}'.")  #lanza error si no corresponde
+        self._estado = "cancelada"  #cambia el estado
+        logger.info(f"Reserva {self.id} cancelada")  #registra el cambio en el log
