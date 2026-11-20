@@ -102,3 +102,51 @@ class Reserva(Entidad):  #hereda de Entidad: tiene id, fecha de creacion y estad
             return total  #devuelve el total cobrado
         finally:  #se ejecuta siempre, haya error o no
             logger.info(f"Fin del intento de procesar la reserva {self.id}")  #deja constancia de que termino el intento
+            
+            
+ 
+# Pruebas del modulo (solo se ejecutan al correr: python reserva.py)
+if __name__ == "__main__":  #este bloque solo corre si se ejecuta este archivo directamente
+    from servicios import ReservaSala, AsesoriaEspecializada  #servicios concretos para las pruebas
+    from excepciones import ErrorSoftwareFJ  #clase base para capturar cualquier error propio
+
+    print("--------------------------------------------------")  
+    print("           PRUEBAS DE LA CLASE RESERVA            ")  #titulo de las pruebas
+    print("--------------------------------------------------")  
+
+    cliente = Cliente("CLI-01", "Carlos Gomez", "1098765432", "carlos@empresa.com", "3001234567")  #cliente valido (5 datos)
+    sala = ReservaSala("SRV-01", "Sala Andes", 50000, 25)  #sala grande
+    asesoria = AsesoriaEspecializada("SRV-03", "Asesoria en Python", 80000, "experto")  #asesoria experta
+
+    print("\n1. Flujo correcto: crear -> confirmar -> procesar")  #prueba del camino normal
+    r1 = Reserva("RES-01", cliente, sala, 3)  #crea la reserva
+    r1.confirmar()  #la confirma
+    r1.procesar()  #la procesa con IVA del 19% por defecto
+    print("  ", r1.obtener_resumen())  #muestra el resultado
+
+    print("\n2. Errores controlados (el programa no se detiene):")  #pruebas de operaciones invalidas
+    r2 = Reserva("RES-02", cliente, asesoria, 2)  #reserva para probar el flujo de estados
+    pruebas = [  #lista de intentos que deben fallar
+        ("Procesar sin confirmar", lambda: r2.procesar()),  #todavia esta pendiente
+        ("Cancelar ya procesada", lambda: r1.cancelar()),  #r1 ya fue procesada
+        ("Reservar 0 horas", lambda: Reserva("RES-03", cliente, sala, 0)),  #horas invalidas
+        ("Cliente que no es Cliente", lambda: Reserva("RES-04", "Carlos", sala, 2)),  #se pasa un texto
+        ("Descuento mayor a 100%", lambda: (r2.confirmar(), r2.procesar(0.19, 1.5))),  #provoca error encadenado
+    ]
+    for nombre, prueba in pruebas:  #ejecuta cada intento
+        try:  #intenta la operacion
+            prueba()  #llama a la prueba
+        except ErrorSoftwareFJ as error:  #captura cualquier error propio del sistema
+            causa = f" | causa: {error.__cause__}" if error.__cause__ else ""  #muestra el error original si fue encadenado
+            print(f"   {nombre}: [{error.codigo}] {error}{causa}")  #muestra el codigo y el mensaje
+
+    print("\n3. Servicio no disponible:")  #prueba de disponibilidad
+    sala.activo = False  #se desactiva la sala
+    try:  #intenta reservarla
+        Reserva("RES-05", cliente, sala, 1)  #debe fallar
+    except ServicioNoDisponibleError as error:  #captura el error de disponibilidad
+        print(f"   [{error.codigo}] {error}")  #muestra el error
+
+    print("\n--------------------------------------------------")  
+    print("       TODAS LAS PRUEBAS FUNCIONARON BIEN         ")  #mensaje final
+    print("--------------------------------------------------")  
