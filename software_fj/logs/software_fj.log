@@ -6,3 +6,35 @@
 2026-11-20 07:24:47,660 | INFO | Reserva RES-02 confirmada
 2026-11-20 07:24:47,661 | ERROR | Fallo el calculo de la reserva RES-02: El descuento '1.5' debe estar entre 0 y 1.
 2026-11-20 07:24:47,661 | INFO | Fin del intento de procesar la reserva RES-02
+2026-11-20 19:57:58,422 | INFO | === INICIO DE SIMULACION DEL SISTEMA SOFTWARE FJ ===
+2026-11-20 19:57:58,422 | INFO | Cliente registrado exitosamente: Cliente ID: CLI-01 | Nombre: Laura Valentina Mendez | Doc: 1020456789 | Email: laura.mendez@correo.com | Tel: 3104567890
+2026-11-20 19:57:58,422 | INFO | Auditoria finalizada para intento de registro de cliente (CLI-01).
+2026-11-20 19:57:58,422 | INFO | Cliente registrado exitosamente: Cliente ID: CLI-02 | Nombre: Andres Felipe Rojas | Doc: 80123456 | Email: andres.rojas@empresa.co | Tel: +573009876543
+2026-11-20 19:57:58,422 | INFO | Auditoria finalizada para intento de registro de cliente (CLI-02).
+2026-11-20 19:57:58,422 | ERROR | [FJ-002] Error registrando cliente 'Camila Torres': El correo 'camila_sin_arroba.com' no tiene un formato valido (ejemplo: usuario@correo.com).
+2026-11-20 19:57:58,422 | INFO | Auditoria finalizada para intento de registro de cliente (CLI-03).
+2026-11-20 19:57:58,422 | ERROR | [FJ-003] Error registrando cliente '   ': El nombre es obligatorio y no puede estar vacio.
+2026-11-20 19:57:58,422 | INFO | Auditoria finalizada para intento de registro de cliente (CLI-04).
+2026-11-20 19:57:58,423 | INFO | Servicio agregado al catalogo: Servicio ID: SRV-01 | Sala: Sala Ejecutiva Andes | Capacidad: 25 personas | Tarifa: $60,000/hora
+2026-11-20 19:57:58,423 | INFO | Servicio agregado al catalogo: Servicio ID: SRV-02 | Equipo: Workstation Dell Precision (Computador Portatil) | Tarifa: $25,000/hora | Seguro: $30,000
+2026-11-20 19:57:58,423 | INFO | Servicio agregado al catalogo: Servicio ID: SRV-03 | Asesoria: Arquitectura Cloud & Python | Nivel: experto | Tarifa: $90,000/hora
+2026-11-20 19:57:58,423 | ERROR | [FJ-001] Creacion de servicio fallida (Tarifa negativa en sala): La tarifa por hora '-50000' debe ser un numero mayor que cero.
+2026-11-20 19:57:58,423 | ERROR | [FJ-001] Creacion de servicio fallida (Nivel inexistente en asesoria): El nivel 'guru' no es valido. Use: junior, senior o experto.
+2026-11-20 19:57:58,423 | ERROR | [FJ-003] Creacion de servicio fallida (Tipo de equipo faltante): El tipo de equipo es obligatorio.
+2026-11-20 19:57:58,423 | INFO | Reserva RES-01 creada: Laura Valentina Mendez - Sala Ejecutiva Andes - 3 h
+2026-11-20 19:57:58,423 | INFO | Reserva RES-01 confirmada
+2026-11-20 19:57:58,423 | INFO | Reserva RES-01 procesada. Total: $257,040.00
+2026-11-20 19:57:58,423 | INFO | Fin del intento de procesar la reserva RES-01
+2026-11-20 19:57:58,423 | INFO | Reserva RES-02 creada: Andres Felipe Rojas - Arquitectura Cloud & Python - 5 h
+2026-11-20 19:57:58,423 | INFO | Reserva RES-02 confirmada
+2026-11-20 19:57:58,423 | INFO | Reserva RES-02 procesada. Total: $963,900.00
+2026-11-20 19:57:58,423 | INFO | Fin del intento de procesar la reserva RES-02
+2026-11-20 19:57:58,423 | INFO | Reserva RES-03 creada: Laura Valentina Mendez - Workstation Dell Precision - 2 h
+2026-11-20 19:57:58,423 | INFO | Reserva RES-03 cancelada
+2026-11-20 19:57:58,423 | WARNING | [FJ-006] Intento de operacion invalida sobre RES-03: No se puede confirmar la reserva RES-03: esta 'cancelada'.
+2026-11-20 19:57:58,423 | ERROR | [FJ-004] Fallo al crear reserva RES-04: El servicio 'Workstation Dell Precision' no esta disponible.
+2026-11-20 19:57:58,423 | INFO | Reserva RES-05 creada: Laura Valentina Mendez - Sala Ejecutiva Andes - 2 h
+2026-11-20 19:57:58,423 | INFO | Reserva RES-05 confirmada
+2026-11-20 19:57:58,423 | ERROR | Fallo el calculo de la reserva RES-05: El descuento '1.5' debe estar entre 0 y 1.
+2026-11-20 19:57:58,423 | INFO | Fin del intento de procesar la reserva RES-05
+2026-11-20 19:57:58,423 | INFO | === FIN DE SIMULACION DEL SISTEMA SOFTWARE FJ (EJECUCION ESTABLE) ===
