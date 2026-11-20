@@ -1,0 +1,8 @@
+2026-11-20 07:24:47,658 | INFO | Reserva RES-01 creada: Carlos Gomez - Sala Andes - 3 h
+2026-11-20 07:24:47,659 | INFO | Reserva RES-01 confirmada
+2026-11-20 07:24:47,660 | INFO | Reserva RES-01 procesada. Total: $214,200.00
+2026-11-20 07:24:47,660 | INFO | Fin del intento de procesar la reserva RES-01
+2026-11-20 07:24:47,660 | INFO | Reserva RES-02 creada: Carlos Gomez - Asesoria en Python - 2 h
+2026-11-20 07:24:47,660 | INFO | Reserva RES-02 confirmada
+2026-11-20 07:24:47,661 | ERROR | Fallo el calculo de la reserva RES-02: El descuento '1.5' debe estar entre 0 y 1.
+2026-11-20 07:24:47,661 | INFO | Fin del intento de procesar la reserva RES-02
