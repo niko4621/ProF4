@@ -85,3 +85,20 @@ class Reserva(Entidad):  #hereda de Entidad: tiene id, fecha de creacion y estad
             raise OperacionNoPermitidaError(f"No se puede cancelar la reserva {self.id}: esta '{self._estado}'.")  #lanza error si no corresponde
         self._estado = "cancelada"  #cambia el estado
         logger.info(f"Reserva {self.id} cancelada")  #registra el cambio en el log
+        
+        
+    def procesar(self, impuesto=0.19, descuento=0.0):  #calcula el costo final y cierra la reserva
+        if self._estado != "confirmada":  #solo se procesa una reserva confirmada
+            raise OperacionNoPermitidaError(f"No se puede procesar la reserva {self.id}: esta '{self._estado}'.")  #lanza error si no corresponde
+        try:  #intenta calcular el costo
+            total = self._servicio.calcular_costo_total(self._horas, impuesto, descuento)  #el servicio calcula su total (polimorfismo)
+        except (ErrorValidacion, CalculoInconsistenteError) as e:  #si el calculo falla por datos o por resultado absurdo
+            logger.error(f"Fallo el calculo de la reserva {self.id}: {e}")  #registra el error original en el log
+            raise CalculoInconsistenteError(f"No se pudo procesar la reserva {self.id}.") from e  #encadena: lanza un error nuevo que guarda el original
+        else:  #solo se ejecuta si el try no tuvo errores
+            self._costo_final = total  #guarda el costo calculado
+            self._estado = "procesada"  #cambia el estado
+            logger.info(f"Reserva {self.id} procesada. Total: ${total:,.2f}")  #registra el exito en el log
+            return total  #devuelve el total cobrado
+        finally:  #se ejecuta siempre, haya error o no
+            logger.info(f"Fin del intento de procesar la reserva {self.id}")  #deja constancia de que termino el intento
