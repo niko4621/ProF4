@@ -9,6 +9,15 @@
 ## Descripción del Proyecto
 Aplicación modular desarrollada en Python bajo el paradigma de **Programación Orientada a Objetos (POO)** para la empresa **Software FJ**. Gestiona en memoria (mediante listas y objetos, sin bases de datos) clientes, servicios especializados y reservas, incorporando manejo avanzado de excepciones y auditoría en archivos de logs.
 
+## Integrantes (Grupo 557)
+| Rol | Integrante | Archivos |
+| --- | --- | --- |
+| 1 | Nicolás Chacón Salgado | `excepciones.py`, `logger.py` |
+| 2 | Cristian Quiroz Barreto | `entidad.py`, `cliente.py` |
+| 3 | Nicolás Chacón Salgado | `servicios.py` |
+| 4 | Nicolás Chacón Salgado | `reserva.py` |
+| 5 | Cristian Quiroz Barreto | `main.py`, `README.md` |
+
 ## Estructura del Proyecto
 * `software_fj/entidad.py`: Clase abstracta base `Entidad` (abstracción y encapsulación).
 * `software_fj/cliente.py`: Clase `Cliente` con validaciones y propiedades `@property`.
@@ -21,4 +30,8 @@ Aplicación modular desarrollada en Python bajo el paradigma de **Programación 
 ## Ejecución
 ```bash
 cd software_fj
-python3 main.py
+python main.py
+````
+````
+
+---
